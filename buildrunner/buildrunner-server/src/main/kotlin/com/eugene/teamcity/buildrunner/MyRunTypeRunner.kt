@@ -8,7 +8,8 @@ import jetbrains.buildServer.serverSide.RunTypeRegistry
 import jetbrains.buildServer.web.openapi.PluginDescriptor
 
 
-class MyRunTypeRunner(private val pluginDescriptor: PluginDescriptor, registry: RunTypeRegistry) : RunType() {
+class MyRunTypeRunner(private val pluginDescriptor: PluginDescriptor,
+                      registry: RunTypeRegistry) : RunType() {
 
     // Constructor
     init {
@@ -54,5 +55,9 @@ class MyRunTypeRunner(private val pluginDescriptor: PluginDescriptor, registry: 
 
     override fun getEditRunnerParamsJspFilePath(): String {
         return pluginDescriptor.getPluginResourcesPath("myEditRunnerSettings.jsp")
+    }
+
+    override fun describeParameters(parameters: MutableMap<String, String>): String {
+        return "Message: '" + parameters.get(MESSAGE_KEY) + "'"
     }
 }

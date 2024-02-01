@@ -5,4 +5,5 @@
        default-autowire="constructor">
 
     <bean id="MyRunTypeRunner" class="com.eugene.teamcity.buildrunner.MyRunTypeRunner"/>
+    <bean id="BuildReportTab" class="com.eugene.teamcity.buildrunner.web.BuildReportTab"/>
 </beans>
