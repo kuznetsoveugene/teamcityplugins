@@ -1,12 +1,10 @@
 package com.eugene.teamcity.buildrunner
 
-// open is like public in normal languages, lol
 import jetbrains.buildServer.RunBuildException
 import jetbrains.buildServer.agent.runner.BuildServiceAdapter
 import jetbrains.buildServer.agent.runner.ProgramCommandLine
 import jetbrains.buildServer.agent.runner.SimpleProgramCommandLine
 import jetbrains.buildServer.util.FileUtil
-import jetbrains.buildServer.util.TCStreamUtil
 import java.io.File
 import java.io.IOException
 import java.util.HashSet
@@ -19,8 +17,14 @@ open class BuildService : BuildServiceAdapter() {
     @Throws(RunBuildException::class)
     override fun makeProgramCommandLine(): ProgramCommandLine {
         val message = runnerParameters[MESSAGE_KEY]
-        val logName = MyConstants.Log_File_Name
-        val scriptContent = "echo 'Your $message goes here' > $logName"
+        val logName = MyConstants.Artifact_Name
+
+        val scriptContent = if (message?.indexOf("error") != -1) {
+            "type D:\\Test_log_TC.txt > $logName"
+        } else {
+            "echo 'Success: $message' > $logName"
+        }
+
         val script = getCustomScript(scriptContent)
         return SimpleProgramCommandLine(runnerContext, script, emptyList())
     }
@@ -45,5 +49,11 @@ open class BuildService : BuildServiceAdapter() {
             FileUtil.delete(file)
         }
         myFilesToDelete.clear()
+
+        val message = runnerParameters[MESSAGE_KEY]
+        if (message?.indexOf("error") != -1)
+        {
+            build.buildLogger.buildFailureDescription(MyConstants.failLog)
+        }
     }
 }
