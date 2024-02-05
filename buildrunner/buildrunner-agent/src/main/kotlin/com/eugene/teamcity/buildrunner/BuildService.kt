@@ -54,6 +54,9 @@ open class BuildService : BuildServiceAdapter() {
         if (message?.indexOf("error") != -1)
         {
             build.buildLogger.buildFailureDescription(MyConstants.failLog)
+            build.buildLogger.buildFailureDescription("Eugene has hardcoded this to fail on purpose!")
+            val statusMessage = "##teamcity[buildStatus status='FAILURE' text='${MyConstants.failLog}']"
+            build.buildLogger.message(statusMessage)
         }
     }
 }
